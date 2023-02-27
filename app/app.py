@@ -20,6 +20,4 @@ def get_report():
         return send_file(os.path.join('..',REPORT_OUTPUT_PATH,f'report_{report_id}.csv') , as_attachment=True)
 
 
-
-
 app.run()

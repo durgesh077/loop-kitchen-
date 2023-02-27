@@ -1,6 +1,5 @@
 import pandas as pd
 import threading
-import pytz
 from nanoid import generate
 import os
 from datetime import datetime
@@ -35,8 +34,8 @@ def getAugumentedDf(business_hour_df: pd.DataFrame):
         for day in not_found_day:
             augumented_df.loc[len(augumented_df)] = [store_id, day, 0, 3600*24-1]
             
-        # if(cnt==300):
-        #     break
+        if(cnt==2000):
+            break
     augumented_df['store_id']= augumented_df['store_id'].astype('int64' )
     augumented_df['day']= augumented_df['day'].astype('int16')
     return augumented_df
