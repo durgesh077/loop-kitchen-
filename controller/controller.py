@@ -10,6 +10,7 @@ STORE_STATUS = 'store_status.csv'
 STORE_BUSINESS_HOUR = 'store_business_hour.csv'
 STORE_TIMEZONE = 'store_timezone.csv'
 
+#extrapolate some week days based on the data we have to handle remaining days
 def getAugumentedDf(business_hour_df: pd.DataFrame):
     all_store_id = business_hour_df['store_id'].unique()
     augumented_df = pd.DataFrame(columns= business_hour_df.columns)
@@ -41,6 +42,7 @@ def getAugumentedDf(business_hour_df: pd.DataFrame):
     return augumented_df
 
 
+#calculate the uptime and downtime of the store for the last week
 def getWeekUptime(store_status, augumented_business_hour_df):
     week_uptime = pd.DataFrame(columns=['store_id', 'last_week_uptime', 'last_week_downtime'])
     store_ids = augumented_business_hour_df['store_id'].unique()
@@ -97,6 +99,7 @@ def getWeekUptime(store_status, augumented_business_hour_df):
 
     return week_uptime
 
+#calculate the uptime and downtime of the store for the last day
 def getDayUptime(store_status, augumented_business_hour_df):
     day_uptime = pd.DataFrame(columns=['store_id', 'last_day_uptime', 'last_day_downtime'])
     store_ids = augumented_business_hour_df['store_id'].unique()
@@ -154,6 +157,7 @@ def getDayUptime(store_status, augumented_business_hour_df):
 
     return day_uptime
 
+#calculate the uptime and downtime of the store for the last hour
 def getHourUptime(store_status, augumented_business_hour_df):
     hour_uptime = pd.DataFrame(columns=['store_id', 'last_hour_uptime', 'last_hour_downtime'])
     store_ids = augumented_business_hour_df['store_id'].unique()
@@ -212,6 +216,7 @@ def getHourUptime(store_status, augumented_business_hour_df):
     return hour_uptime
 
 
+#generate report in a thread and save it as a file and update the status of the report to finished
 def generateReportThread(report_id):
     business_hour_df= pd.read_csv("./CSV/store_business_hour.csv")
     store_status = pd.read_csv('./CSV/store_status.csv')
@@ -246,7 +251,7 @@ def generateReportThread(report_id):
     ReportDB.getStatusOf(report_id)
     return week_uptime
     
-
+#main controller for trigger report generation
 def generateReport():
     report_id=generate()
     ReportDB.insert_report(report_id)
